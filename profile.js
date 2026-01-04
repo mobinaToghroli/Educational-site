@@ -6,7 +6,7 @@
 class ProfileManager {
   constructor() {
     this.studentInfo = {
-      name: 'امیرمهدی حسینی',
+      name: 'علی حسینی',
       studentId: '401123456789',
       field: 'علوم کامپیوتر',
       faculty: 'دانشکده علوم پایه',
