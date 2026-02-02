@@ -1,0 +1,79 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" class="font-vazir">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>پیشخوان خدمات - سیستم جامع دانشگاهی گلستان</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="{% static 'css/globals.css' %}">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            vazir: ['"Vazirmatn"', 'sans-serif'],
+          },
+        },
+      },
+    }
+  </script>
+</head>
+</html>
+    <header class="bg-white dark:bg-slate-800 shadow-md py-4 px-6 sticky top-0 z-50">
+      <div class="flex items-center justify-between">
+        <!-- Mobile menu button -->
+        <button id="sidebar-toggle" class="md:hidden p-2 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700">
+          <svg id="sidebar-icon" class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+          <svg id="sidebar-close-icon" class="h-6 w-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+
+        <!-- Logo/Title -->
+{#        <div class="text-xl font-bold text-indigo-600 dark:text-indigo-400 font-vazir">#}
+{#          سیستم جامع دانشگاهی گلستان#}
+{#        </div>#}
+
+{#        <!-- Right side controls -->#}
+{#        <div class="flex items-center space-x-4 space-x-reverse">#}
+{#          <!-- Theme Toggle -->#}
+{#          <button id="dark-mode-toggle" class="p-2 rounded-full bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-slate-600">#}
+{#            <svg id="light-icon" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">#}
+{#              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />#}
+{#            </svg>#}
+{#            <svg id="dark-icon" class="h-5 w-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">#}
+{#              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />#}
+{#            </svg>#}
+{#          </button>#}
+{##}
+{#          <!-- User Profile Dropdown -->#}
+{#          <div id="user-dropdown" class="relative">#}
+{#            <button id="user-dropdown-btn" class="flex items-center space-x-2 space-x-reverse p-2 rounded-md hover:bg-gray-100 dark:hover:bg-slate-700">#}
+{#              <div class="bg-gray-200 border-2 border-dashed rounded-xl w-8 h-8"></div>#}
+{#              <span class="hidden md:inline text-gray-700 dark:text-gray-300">امیرمهدی حسینی</span>#}
+{#            </button>#}
+
+            <div id="user-dropdown-menu" class="absolute left-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-md shadow-lg py-1 z-50 hidden">
+              <div class="px-4 py-2 border-b border-gray-200 dark:border-slate-700">
+                <p class="text-sm font-medium text-gray-900 dark:text-white">امیرمهدی حسینی</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400">401123456789</p>
+              </div>
+              <a href="profile.html" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700">
+                مشاهده پروفایل
+              </a>
+              <button class="w-full text-right px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 flex items-center">
+                <svg class="h-4 w-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                خروج
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
