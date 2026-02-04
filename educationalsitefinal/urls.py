@@ -20,7 +20,7 @@ from django.urls import path
 
 from educationalsitefinal import settings
 from educationalsitefinal.views import home_page, header, user_profile_page, exam_schedule, change_password, \
-    graduation_request
+    graduation_request , login_page
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,6 +30,7 @@ urlpatterns = [
     path('schedule', exam_schedule , name='schedule'),
     path('change_password', change_password , name='change_password'),
     path('graduation_request', graduation_request , name='graduation_request'),
+    path('login', login_page , name='login'),
 
 ]
 if settings.DEBUG:
