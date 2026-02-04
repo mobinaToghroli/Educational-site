@@ -19,11 +19,18 @@ from django.contrib import admin
 from django.urls import path
 
 from educationalsitefinal import settings
-from educationalsitefinal.views import home_page
+from educationalsitefinal.views import home_page, header, user_profile_page, exam_schedule, change_password, \
+    graduation_request
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', home_page),
+    path('', home_page , name='home'),
+    path('header', header , name='header'),
+    path('user_profile_page', user_profile_page , name='user_profile_page'),
+    path('schedule', exam_schedule , name='schedule'),
+    path('change_password', change_password , name='change_password'),
+    path('graduation_request', graduation_request , name='graduation_request'),
+
 ]
 if settings.DEBUG:
     urlpatterns = urlpatterns + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
