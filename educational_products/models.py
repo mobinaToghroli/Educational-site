@@ -1,6 +1,7 @@
 import os
 import random
 from django.db import models
+from django.contrib.auth.models import User
 
 
 def get_file_extension(file):
@@ -32,3 +33,92 @@ class Product(models.Model):
 
     def __str__(self):
         return f"{self.name} {self.lastname}"
+
+
+
+
+
+
+
+class GraduationRequest(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'در انتظار بررسی'),
+        ('approved', 'تأیید شده'),
+        ('rejected', 'رد شده'),
+        ('need_correction', 'نیاز به اصلاح'),
+    ]
+
+    DEGREE_CHOICES = [
+        ('bachelor', 'کارشناسی'),
+        ('master', 'کارشناسی ارشد'),
+        ('phd', 'دکتری'),
+    ]
+
+    MAJOR_CHOICES = [
+        ('computer_science', 'مهندسی کامپیوتر'),
+        ('software_engineering', 'مهندسی نرم‌افزار'),
+        ('it', 'فناوری اطلاعات'),
+        ('ce', 'مهندسی عمران'),
+        ('ee', 'مهندسی برق'),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='کاربر')
+    student_name = models.CharField(max_length=100, verbose_name='نام و نام خانوادگی')
+    student_id = models.CharField(max_length=20, verbose_name='شماره دانشجویی')
+    major = models.CharField(max_length=50, choices=MAJOR_CHOICES, verbose_name='رشته تحصیلی')
+    degree = models.CharField(max_length=20, choices=DEGREE_CHOICES, verbose_name='مقطع تحصیلی')
+    graduation_semester = models.CharField(max_length=50, verbose_name='نیمسال فارغ‌التحصیلی')
+    graduation_date = models.DateField(verbose_name='تاریخ پیشنهادی فارغ‌التحصیلی')
+    thesis_title = models.CharField(max_length=200, blank=True, verbose_name='عنوان پایان‌نامه/پروژه')
+    supervisor_name = models.CharField(max_length=100, blank=True, verbose_name='نام استاد راهنما')
+    remarks = models.TextField(blank=True, verbose_name='توضیحات/ملاحظات')
+    agree_to_terms = models.BooleanField(default=False, verbose_name='موافقت با قوانین')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending', verbose_name='وضعیت')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='تاریخ ثبت')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='آخرین ویرایش')
+
+    class Meta:
+        verbose_name = 'درخواست فارغ‌التحصیلی'
+        verbose_name_plural = 'درخواست‌های فارغ‌التحصیلی'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.student_name} - {self.get_status_display()}"
+
+
+# models.py - Add these models
+class StudentProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='student_profile')
+    student_id = models.CharField(max_length=20, verbose_name='شماره دانشجویی')
+    major = models.CharField(max_length=100, verbose_name='رشته تحصیلی')
+    entry_year = models.IntegerField(verbose_name='سال ورود')
+    gpa = models.FloatField(verbose_name='معدل', default=0.0)
+    phone = models.CharField(max_length=15, blank=True, verbose_name='تلفن همراه')
+    email = models.EmailField(verbose_name='ایمیل')
+    address = models.TextField(blank=True, verbose_name='آدرس')
+
+    class Meta:
+        verbose_name = 'پروفایل دانشجو'
+        verbose_name_plural = 'پروفایل‌های دانشجویی'
+
+    def __str__(self):
+        return f"{self.user.get_full_name()} - {self.student_id}"
+
+
+class ExamSchedule(models.Model):
+    student = models.ForeignKey(User, on_delete=models.CASCADE, related_name='exam_schedules')
+    course_name = models.CharField(max_length=200, verbose_name='نام درس')
+    professor = models.CharField(max_length=100, verbose_name='استاد')
+    exam_date = models.DateField(verbose_name='تاریخ امتحان')
+    exam_time = models.TimeField(verbose_name='ساعت امتحان')
+    location = models.CharField(max_length=100, verbose_name='مکان')
+    seat_number = models.CharField(max_length=20, verbose_name='شماره صندلی')
+    status = models.CharField(max_length=50, default='تأیید شده', verbose_name='وضعیت')
+
+    class Meta:
+        verbose_name = 'برنامه امتحانی'
+        verbose_name_plural = 'برنامه‌های امتحانی'
+        ordering = ['exam_date', 'exam_time']
+
+    def __str__(self):
+        return f"{self.course_name} - {self.student.username}"

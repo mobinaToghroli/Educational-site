@@ -1,0 +1,54 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block contents %}
+<div class="min-h-screen bg-gray-50 dark:bg-slate-900 p-4">
+    <div class="max-w-4xl mx-auto">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 mt-8">
+            <div class="text-center">
+                <div class="w-20 h-20 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <svg class="h-10 w-10 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </div>
+                <h1 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">درخواست شما با موفقیت ثبت شد!</h1>
+                <p class="text-gray-600 dark:text-gray-400 mb-6">{{ message }}</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mb-8">{{ details }}</p>
+
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <a href="{% url 'home' %}" class="inline-flex items-center justify-center px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-200">
+                        <svg class="h-5 w-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                        </svg>
+                        بازگشت به پیشخوان
+                    </a>
+                    <a href="{% url 'my_requests' %}" class="inline-flex items-center justify-center px-6 py-3 bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-slate-600 transition duration-200">
+                        <svg class="h-5 w-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                        </svg>
+                        مشاهده درخواست‌های من
+                    </a>
+                </div>
+
+                <div class="mt-12 pt-8 border-t border-gray-200 dark:border-slate-700">
+                    <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-4">مراحل بعدی</h3>
+                    <ul class="text-right space-y-2 text-gray-600 dark:text-gray-400">
+                        <li class="flex items-center justify-end">
+                            <span class="mr-2">بررسی درخواست توسط آموزش</span>
+                            <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
+                        </li>
+                        <li class="flex items-center justify-end">
+                            <span class="mr-2">تأیید استاد راهنما</span>
+                            <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                        </li>
+                        <li class="flex items-center justify-end">
+                            <span class="mr-2">صدور گواهی موقت</span>
+                            <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

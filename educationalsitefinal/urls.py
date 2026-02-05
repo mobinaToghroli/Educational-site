@@ -20,19 +20,23 @@ from django.urls import path
 
 from educationalsitefinal import settings
 from educationalsitefinal.views import home_page, header, user_profile_page, exam_schedule, change_password, \
-    graduation_request , login_page
+    graduation_request, login_page, graduation_success, my_graduation_requests, logout_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', home_page , name='home'),
+    path('home', home_page , name='home'),
     path('header', header , name='header'),
     path('user_profile_page', user_profile_page , name='user_profile_page'),
     path('schedule', exam_schedule , name='schedule'),
     path('change_password', change_password , name='change_password'),
-    path('graduation_request', graduation_request , name='graduation_request'),
-    path('login', login_page , name='login'),
+    path('', login_page , name='login'),
+    path('graduation-request/', graduation_request, name='graduation_request'),
+    path('graduation-success/', graduation_success, name='graduation_success'),
+    path('my-requests/', my_graduation_requests, name='my_requests'),
+    path('logout/', logout_view, name='logout'),
 
 ]
+
 if settings.DEBUG:
     urlpatterns = urlpatterns + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns = urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
