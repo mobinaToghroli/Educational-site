@@ -149,43 +149,43 @@ def user_profile_page(request):
     context = {}
 
     # Different data for taha
-    if request.user.username == 'taha':
+    if request.user.username == 'Taha81':
         context = {
-            'student_name': 'طاها محمدی',
+            'student_name': 'طاها شریف',
             'student_id': '401123456789',
             'major': 'مهندسی کامپیوتر',
-            'entry_year': '1400',
+            'entry_year': '۱۴۰۰',
             'gpa': '17.5',
             'phone': '09123456789',
-            'email': 'taha@example.com',
-            'address': 'تهران، خیابان اصلی، پلاک ۱۲۳',
+            'email': 'taha@gmail.com',
+            'address': 'کرمان شهرک مظهری',
             'status': 'فعال',
             'field': 'مهندسی نرم‌افزار',
             'advisor': 'دکتر احمدی',
             'units_passed': '۱۳۰',
             'units_current': '۲۰',
             'national_code': '0012345678',
-            'birth_date': '۱۳۷۹/۰۵/۱۵',
+            'birth_date': '۱۳۸۱/۰۵/۱۵',
         }
 
     # Different data for zohreh
-    elif request.user.username == 'zohreh':
+    elif request.user.username == 'Zohreh83':
         context = {
-            'student_name': 'زهرا رضایی',
+            'student_name': 'زهره حسینی',
             'student_id': '401987654321',
-            'major': 'مهندسی نرم‌افزار',
-            'entry_year': '۱۳۹۹',
+            'major': 'مهندسی کامپیوتر',
+            'entry_year': '۱۴۰۱',
             'gpa': '۱۸.۲',
             'phone': '09129876543',
-            'email': 'zohreh@example.com',
-            'address': 'مشهد، بلوار وکیل آباد، کوچه ۱۰',
+            'email': 'zohreh@gmail.com',
+            'address': 'کرمان،خیابان فیروزه',
             'status': 'فعال',
-            'field': 'هوش مصنوعی',
+            'field': 'نرمافزار ',
             'advisor': 'دکتر کریمی',
             'units_passed': '۱۴۰',
             'units_current': '۱۸',
             'national_code': '0022334455',
-            'birth_date': '۱۳۷۸/۰۸/۲۰',
+            'birth_date': '۱۳۸۲/۰۸/۲۰',
         }
 
     return render(request, 'user_profile_page.html', context)
@@ -197,12 +197,12 @@ def exam_schedule(request):
     student_info = {}
 
     # Different data for taha
-    if request.user.username == 'taha':
+    if request.user.username == 'Taha81':
         student_info = {
-            'name': 'طاها محمدی',
+            'name': 'طاها شریف',
             'student_id': '401123456789',
             'major': 'مهندسی کامپیوتر',
-            'year': 'سال چهارم',
+
         }
 
         exam_schedules = [
@@ -245,18 +245,18 @@ def exam_schedule(request):
         ]
 
     # Different data for zohreh
-    elif request.user.username == 'zohreh':
+    elif request.user.username == 'Zohreh83':
         student_info = {
-            'name': 'زهرا رضایی',
+            'name': 'زهره حسینی',
             'student_id': '401987654321',
-            'major': 'مهندسی نرم‌افزار',
-            'year': 'سال سوم',
+            'major': 'مهندسی کامپیوتر',
+
         }
 
         exam_schedules = [
             {
                 'course_name': 'طراحی الگوریتم',
-                'professor': 'دکتر حسینی',
+                'professor': 'دکتر محسنی',
                 'exam_date': '۱۴۰۲/۱۰/۲۶',
                 'exam_time': '۹:۰۰',
                 'location': 'سالن ۳۰۱',
