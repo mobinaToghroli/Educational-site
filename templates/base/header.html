@@ -37,7 +37,7 @@
 
             <div id="user-dropdown-menu" class="absolute left-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-md shadow-lg py-1 z-50 hidden">
               <div class="px-4 py-2 border-b border-gray-200 dark:border-slate-700">
-                <p class="text-sm font-medium text-gray-900 dark:text-white">امیرمهدی حسینی</p>
+                <p class="text-sm font-medium text-gray-900 dark:text-white">{{ user.first_name }} {{ user.last_name }}</p>
                 <p class="text-xs text-gray-500 dark:text-gray-400">401123456789</p>
               </div>
               <a href="{% url 'user_profile_page' %}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700">
