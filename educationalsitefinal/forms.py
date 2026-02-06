@@ -91,10 +91,10 @@ class GraduationRequestForm(forms.ModelForm):  # تغییر از forms.Form به
     graduation_semester = forms.ChoiceField(
         label='نیمسال فارغ‌التحصیلی',
         choices=[
-            ('fall_1402', 'پاییز ۱۴۰۲'),
-            ('spring_1403', 'بهار ۱۴۰۳'),
-            ('summer_1403', 'تابستان ۱۴۰۳'),
-            ('fall_1403', 'پاییز ۱۴۰۳'),
+            ('fall_1402', 'پاییز ۱۴۰۴'),
+            ('spring_1403', 'بهار ۱۴۰۵'),
+            ('summer_1403', 'تابستان ۱۴۰۵'),
+            ('fall_1403', 'پاییز ۱۴۰۵'),
         ],
         widget=forms.Select(attrs={
             'class': 'form-select',

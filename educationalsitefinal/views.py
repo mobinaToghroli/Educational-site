@@ -1,6 +1,5 @@
 from django.contrib.auth import authenticate , login
 from django.shortcuts import render, redirect
-
 from educational_products.models import GraduationRequest
 from .forms import LoginForm
 from django.contrib.auth import update_session_auth_hash
@@ -54,13 +53,11 @@ def graduation_request(request):
     return render(request, 'request.html', context)
 
 
-# FIXED VERSION:
 from django.contrib.auth.decorators import login_required
 from .forms import LoginForm, GraduationRequestForm  # Make sure to import GraduationRequestForm
 
 
-@login_required  # Add this decorator
-# در views.py، تابع graduation_request را با این نسخه جایگزین کنید:
+@login_required
 
 @login_required
 def graduation_request(request):
@@ -103,7 +100,6 @@ def graduation_request(request):
     }
     return render(request, 'request.html', context)
 
-# ADD THESE VIEWS (if not already added):
 @login_required
 def graduation_success(request):
     context = {
@@ -116,7 +112,7 @@ def graduation_success(request):
 @login_required
 def my_graduation_requests(request):
     context = {
-        'requests': []  # Add actual data if you have a model
+        'requests': []
     }
     return render(request, 'my_requests.html', context)
 
@@ -222,7 +218,7 @@ def exam_schedule(request):
     if request.user.username == 'Taha81':
         student_info = {
             'name': 'طاها شریف',
-            'student_id': '401123456789',
+            'student_id': '400123456789',
             'major': 'مهندسی کامپیوتر',
 
         }
@@ -231,7 +227,7 @@ def exam_schedule(request):
             {
                 'course_name': 'پایگاه داده',
                 'professor': 'دکتر احمدی',
-                'exam_date': '۱۴۰۲/۱۰/۲۵',
+                'exam_date': '۱۴۰۴/۱۰/۲۵',
                 'exam_time': '۸:۳۰',
                 'location': 'سالن ۱۰۱',
                 'seat_number': 'A12',
@@ -240,7 +236,7 @@ def exam_schedule(request):
             {
                 'course_name': 'هوش مصنوعی',
                 'professor': 'دکتر کریمی',
-                'exam_date': '۱۴۰۲/۱۰/۲۸',
+                'exam_date': '۱۴۰۴/۱۰/۲۸',
                 'exam_time': '۱۰:۰۰',
                 'location': 'سالن ۲۰۳',
                 'seat_number': 'B05',
@@ -249,7 +245,7 @@ def exam_schedule(request):
             {
                 'course_name': 'شبکه‌های کامپیوتری',
                 'professor': 'دکتر محمدی',
-                'exam_date': '۱۴۰۲/۱۱/۰۲',
+                'exam_date': '۱۴۰۴/۱۱/۰۲',
                 'exam_time': '۱۳:۳۰',
                 'location': 'سالن ۳۰۵',
                 'seat_number': 'C18',
@@ -258,7 +254,7 @@ def exam_schedule(request):
             {
                 'course_name': 'مهندسی نرم‌افزار',
                 'professor': 'دکتر رضایی',
-                'exam_date': '۱۴۰۲/۱۱/۰۵',
+                'exam_date': '۱۴۰۴/۱۱/۰۵',
                 'exam_time': '۹:۰۰',
                 'location': 'سالن ۱۰۲',
                 'seat_number': 'D07',
@@ -279,7 +275,7 @@ def exam_schedule(request):
             {
                 'course_name': 'طراحی الگوریتم',
                 'professor': 'دکتر محسنی',
-                'exam_date': '۱۴۰۲/۱۰/۲۶',
+                'exam_date': '۱۴۰۴/۱۰/۲۶',
                 'exam_time': '۹:۰۰',
                 'location': 'سالن ۳۰۱',
                 'seat_number': 'C08',
@@ -288,7 +284,7 @@ def exam_schedule(request):
             {
                 'course_name': 'برنامه‌نویسی پیشرفته',
                 'professor': 'دکتر نوروزی',
-                'exam_date': '۱۴۰۲/۱۰/۳۰',
+                'exam_date': '۱۴۰۴/۱۰/۳۰',
                 'exam_time': '۱۴:۳۰',
                 'location': 'سالن ۱۰۲',
                 'seat_number': 'D15',
@@ -297,7 +293,7 @@ def exam_schedule(request):
             {
                 'course_name': 'پایگاه داده پیشرفته',
                 'professor': 'دکتر جعفری',
-                'exam_date': '۱۴۰۲/۱۱/۰۳',
+                'exam_date': '۱۴۰۴/۱۱/۰۳',
                 'exam_time': '۱۱:۰۰',
                 'location': 'سالن ۲۰۱',
                 'seat_number': 'E22',
@@ -306,7 +302,7 @@ def exam_schedule(request):
             {
                 'course_name': 'مهندسی اینترنت',
                 'professor': 'دکتر امیری',
-                'exam_date': '۱۴۰۲/۱۱/۰۷',
+                'exam_date': '۱۴۰۴/۱۱/۰۷',
                 'exam_time': '۱۵:۳۰',
                 'location': 'سالن ۴۰۱',
                 'seat_number': 'F10',
@@ -323,11 +319,9 @@ def exam_schedule(request):
     return render(request, 'schedule.html', context)
 
 
-# در views.py، تابع my_graduation_requests را به‌روزرسانی کنید:
 
 @login_required
 def my_graduation_requests(request):
-    # گرفتن درخواست‌های کاربر از دیتابیس
     requests = GraduationRequest.objects.filter(user=request.user).order_by('-created_at')
 
     context = {
