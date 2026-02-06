@@ -3,6 +3,8 @@ from django.utils import timezone
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 
+from educational_products.models import GraduationRequest
+
 
 class LoginForm(forms.Form):
     userName = forms.CharField(
@@ -27,7 +29,14 @@ class LoginForm(forms.Form):
 
 
 
-class GraduationRequestForm(forms.Form):
+class GraduationRequestForm(forms.ModelForm):  # تغییر از forms.Form به forms.ModelForm
+    class Meta:
+        model = GraduationRequest
+        fields = [
+            'student_name', 'student_id', 'major', 'degree',
+            'graduation_semester', 'graduation_date', 'thesis_title',
+            'supervisor_name', 'remarks', 'agree_to_terms'
+        ]
     # Step 1: Personal Information
     student_name = forms.CharField(
         label='نام و نام خانوادگی',

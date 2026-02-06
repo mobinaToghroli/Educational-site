@@ -1,5 +1,7 @@
 from django.contrib.auth import authenticate , login
 from django.shortcuts import render, redirect
+
+from educational_products.models import GraduationRequest
 from .forms import LoginForm
 from django.contrib.auth import update_session_auth_hash
 from django.contrib import messages
@@ -58,12 +60,33 @@ from .forms import LoginForm, GraduationRequestForm  # Make sure to import Gradu
 
 
 @login_required  # Add this decorator
+# در views.py، تابع graduation_request را با این نسخه جایگزین کنید:
+
+@login_required
 def graduation_request(request):
     if request.method == 'POST':
         form = GraduationRequestForm(request.POST)
         if form.is_valid():
-            # Process the form data
-            # For now, just redirect to success
+            # ذخیره داده‌ها در مدل GraduationRequest
+            graduation_request = form.save(commit=False)
+            graduation_request.user = request.user  # مرتبط کردن با کاربر لاگین کرده
+
+            # استفاده از داده‌های فرم
+            graduation_request.student_name = form.cleaned_data['student_name']
+            graduation_request.student_id = form.cleaned_data['student_id']
+            graduation_request.major = form.cleaned_data['major']
+            graduation_request.degree = form.cleaned_data['degree']
+            graduation_request.graduation_semester = form.cleaned_data['graduation_semester']
+            graduation_request.graduation_date = form.cleaned_data['graduation_date']
+            graduation_request.thesis_title = form.cleaned_data.get('thesis_title', '')
+            graduation_request.supervisor_name = form.cleaned_data.get('supervisor_name', '')
+            graduation_request.remarks = form.cleaned_data.get('remarks', '')
+            graduation_request.agree_to_terms = form.cleaned_data['agree_to_terms']
+            graduation_request.status = 'pending'  # وضعیت اولیه
+
+            graduation_request.save()  # ذخیره در دیتابیس
+
+            # انتقال به صفحه موفقیت با اطلاعات ثبت شده
             return redirect('graduation_success')
     else:
         # Pre-fill form with user data
@@ -76,10 +99,9 @@ def graduation_request(request):
         form = GraduationRequestForm(initial=initial_data)
 
     context = {
-        'form': form,  # Add form to context
+        'form': form,
     }
     return render(request, 'request.html', context)
-
 
 # ADD THESE VIEWS (if not already added):
 @login_required
@@ -299,3 +321,16 @@ def exam_schedule(request):
     }
 
     return render(request, 'schedule.html', context)
+
+
+# در views.py، تابع my_graduation_requests را به‌روزرسانی کنید:
+
+@login_required
+def my_graduation_requests(request):
+    # گرفتن درخواست‌های کاربر از دیتابیس
+    requests = GraduationRequest.objects.filter(user=request.user).order_by('-created_at')
+
+    context = {
+        'requests': requests
+    }
+    return render(request, 'my_requests.html', context)
