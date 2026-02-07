@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate , login
 from django.shortcuts import render, redirect
-from educational_products.models import GraduationRequest
+from educational_products.models import GraduationRequest, ExamSchedule, StudentProfile
 from .forms import LoginForm
 from django.contrib.auth import update_session_auth_hash
 from django.contrib import messages
@@ -162,162 +162,201 @@ def logout_view(request):
 
 
 @login_required
+# def user_profile_page(request):
+#     # Default empty context
+#     context = {}
+#
+#     # Different data for taha
+#     if request.user.username == 'Taha81':
+#         context = {
+#             'student_name': 'طاها شریف',
+#             'student_id': '401123456789',
+#             'major': 'مهندسی کامپیوتر',
+#             'entry_year': '۱۴۰۰',
+#             'gpa': '17.5',
+#             'phone': '09123456789',
+#             'email': 'taha@gmail.com',
+#             'address': 'کرمان شهرک مظهری',
+#             'status': 'فعال',
+#             'field': 'مهندسی نرم‌افزار',
+#             'advisor': 'دکتر احمدی',
+#             'units_passed': '۱۳۰',
+#             'units_current': '۲۰',
+#             'national_code': '0012345678',
+#             'birth_date': '۱۳۸۱/۰۵/۱۵',
+#         }
+#
+#     # Different data for zohreh
+#     elif request.user.username == 'Zohreh83':
+#         context = {
+#             'student_name': 'زهره حسینی',
+#             'student_id': '401987654321',
+#             'major': 'مهندسی کامپیوتر',
+#             'entry_year': '۱۴۰۱',
+#             'gpa': '۱۸.۲',
+#             'phone': '09129876543',
+#             'email': 'zohreh@gmail.com',
+#             'address': 'کرمان،خیابان فیروزه',
+#             'status': 'فعال',
+#             'field': 'نرمافزار ',
+#             'advisor': 'دکتر کریمی',
+#             'units_passed': '۱۴۰',
+#             'units_current': '۱۸',
+#             'national_code': '0022334455',
+#             'birth_date': '۱۳۸۲/۰۸/۲۰',
+#         }
+#
+#     return render(request, 'user_profile_page.html', context)
+
+@login_required
 def user_profile_page(request):
-    # Default empty context
-    context = {}
+    # دریافت پروفایل کاربر از دیتابیس (بدون توجه به اینکه کیست)
+    profile = StudentProfile.objects.filter(user=request.user).first()
 
-    # Different data for taha
-    if request.user.username == 'Taha81':
-        context = {
-            'student_name': 'طاها شریف',
-            'student_id': '401123456789',
-            'major': 'مهندسی کامپیوتر',
-            'entry_year': '۱۴۰۰',
-            'gpa': '17.5',
-            'phone': '09123456789',
-            'email': 'taha@gmail.com',
-            'address': 'کرمان شهرک مظهری',
-            'status': 'فعال',
-            'field': 'مهندسی نرم‌افزار',
-            'advisor': 'دکتر احمدی',
-            'units_passed': '۱۳۰',
-            'units_current': '۲۰',
-            'national_code': '0012345678',
-            'birth_date': '۱۳۸۱/۰۵/۱۵',
-        }
+    if not profile:
+        return render(request, 'user_profile_page.html', {'error': 'پروفایلی یافت نشد'})
 
-    # Different data for zohreh
-    elif request.user.username == 'Zohreh83':
-        context = {
-            'student_name': 'زهره حسینی',
-            'student_id': '401987654321',
-            'major': 'مهندسی کامپیوتر',
-            'entry_year': '۱۴۰۱',
-            'gpa': '۱۸.۲',
-            'phone': '09129876543',
-            'email': 'zohreh@gmail.com',
-            'address': 'کرمان،خیابان فیروزه',
-            'status': 'فعال',
-            'field': 'نرمافزار ',
-            'advisor': 'دکتر کریمی',
-            'units_passed': '۱۴۰',
-            'units_current': '۱۸',
-            'national_code': '0022334455',
-            'birth_date': '۱۳۸۲/۰۸/۲۰',
-        }
-
+    context = {
+        'student_name': f"{request.user.first_name} {request.user.last_name}",
+        'student_id': profile.student_id,
+        'major': profile.major,
+        'entry_year': profile.entry_year,
+        'gpa': profile.gpa,
+        'phone': profile.phone,
+        'email': profile.email,
+        'address': profile.address,
+        'status': 'فعال',
+    }
     return render(request, 'user_profile_page.html', context)
 
 
 @login_required
+# def exam_schedule(request):
+#     exam_schedules = []
+#     student_info = {}
+#
+#     # Different data for taha
+#     if request.user.username == 'Taha81':
+#         student_info = {
+#             'name': 'طاها شریف',
+#             'student_id': '400123456789',
+#             'major': 'مهندسی کامپیوتر',
+#
+#         }
+#
+#         exam_schedules = [
+#             {
+#                 'course_name': 'پایگاه داده',
+#                 'professor': 'دکتر احمدی',
+#                 'exam_date': '۱۴۰۴/۱۰/۲۵',
+#                 'exam_time': '۸:۳۰',
+#                 'location': 'سالن ۱۰۱',
+#                 'seat_number': 'A12',
+#                 'status': 'تأیید شده'
+#             },
+#             {
+#                 'course_name': 'هوش مصنوعی',
+#                 'professor': 'دکتر کریمی',
+#                 'exam_date': '۱۴۰۴/۱۰/۲۸',
+#                 'exam_time': '۱۰:۰۰',
+#                 'location': 'سالن ۲۰۳',
+#                 'seat_number': 'B05',
+#                 'status': 'تأیید شده'
+#             },
+#             {
+#                 'course_name': 'شبکه‌های کامپیوتری',
+#                 'professor': 'دکتر محمدی',
+#                 'exam_date': '۱۴۰۴/۱۱/۰۲',
+#                 'exam_time': '۱۳:۳۰',
+#                 'location': 'سالن ۳۰۵',
+#                 'seat_number': 'C18',
+#                 'status': 'تأیید شده'
+#             },
+#             {
+#                 'course_name': 'مهندسی نرم‌افزار',
+#                 'professor': 'دکتر رضایی',
+#                 'exam_date': '۱۴۰۴/۱۱/۰۵',
+#                 'exam_time': '۹:۰۰',
+#                 'location': 'سالن ۱۰۲',
+#                 'seat_number': 'D07',
+#                 'status': 'تأیید شده'
+#             }
+#         ]
+#
+#     # Different data for zohreh
+#     elif request.user.username == 'Zohreh83':
+#         student_info = {
+#             'name': 'زهره حسینی',
+#             'student_id': '401987654321',
+#             'major': 'مهندسی کامپیوتر',
+#
+#         }
+#
+#         exam_schedules = [
+#             {
+#                 'course_name': 'طراحی الگوریتم',
+#                 'professor': 'دکتر محسنی',
+#                 'exam_date': '۱۴۰۴/۱۰/۲۶',
+#                 'exam_time': '۹:۰۰',
+#                 'location': 'سالن ۳۰۱',
+#                 'seat_number': 'C08',
+#                 'status': 'تأیید شده'
+#             },
+#             {
+#                 'course_name': 'برنامه‌نویسی پیشرفته',
+#                 'professor': 'دکتر نوروزی',
+#                 'exam_date': '۱۴۰۴/۱۰/۳۰',
+#                 'exam_time': '۱۴:۳۰',
+#                 'location': 'سالن ۱۰۲',
+#                 'seat_number': 'D15',
+#                 'status': 'تأیید شده'
+#             },
+#             {
+#                 'course_name': 'پایگاه داده پیشرفته',
+#                 'professor': 'دکتر جعفری',
+#                 'exam_date': '۱۴۰۴/۱۱/۰۳',
+#                 'exam_time': '۱۱:۰۰',
+#                 'location': 'سالن ۲۰۱',
+#                 'seat_number': 'E22',
+#                 'status': 'تأیید شده'
+#             },
+#             {
+#                 'course_name': 'مهندسی اینترنت',
+#                 'professor': 'دکتر امیری',
+#                 'exam_date': '۱۴۰۴/۱۱/۰۷',
+#                 'exam_time': '۱۵:۳۰',
+#                 'location': 'سالن ۴۰۱',
+#                 'seat_number': 'F10',
+#                 'status': 'تأیید شده'
+#             }
+#         ]
+#
+#     context = {
+#         'exam_schedules': exam_schedules,
+#         'student_info': student_info,
+#         'today': datetime.now().strftime("%Y/%m/%d"),
+#     }
+#
+#     return render(request, 'schedule.html', context)
+
+@login_required
 def exam_schedule(request):
-    exam_schedules = []
-    student_info = {}
+    # دریافت امتحانات کاربر از دیتابیس
+    exams = ExamSchedule.objects.filter(student=request.user)
 
-    # Different data for taha
-    if request.user.username == 'Taha81':
-        student_info = {
-            'name': 'طاها شریف',
-            'student_id': '400123456789',
-            'major': 'مهندسی کامپیوتر',
-
-        }
-
-        exam_schedules = [
-            {
-                'course_name': 'پایگاه داده',
-                'professor': 'دکتر احمدی',
-                'exam_date': '۱۴۰۴/۱۰/۲۵',
-                'exam_time': '۸:۳۰',
-                'location': 'سالن ۱۰۱',
-                'seat_number': 'A12',
-                'status': 'تأیید شده'
-            },
-            {
-                'course_name': 'هوش مصنوعی',
-                'professor': 'دکتر کریمی',
-                'exam_date': '۱۴۰۴/۱۰/۲۸',
-                'exam_time': '۱۰:۰۰',
-                'location': 'سالن ۲۰۳',
-                'seat_number': 'B05',
-                'status': 'تأیید شده'
-            },
-            {
-                'course_name': 'شبکه‌های کامپیوتری',
-                'professor': 'دکتر محمدی',
-                'exam_date': '۱۴۰۴/۱۱/۰۲',
-                'exam_time': '۱۳:۳۰',
-                'location': 'سالن ۳۰۵',
-                'seat_number': 'C18',
-                'status': 'تأیید شده'
-            },
-            {
-                'course_name': 'مهندسی نرم‌افزار',
-                'professor': 'دکتر رضایی',
-                'exam_date': '۱۴۰۴/۱۱/۰۵',
-                'exam_time': '۹:۰۰',
-                'location': 'سالن ۱۰۲',
-                'seat_number': 'D07',
-                'status': 'تأیید شده'
-            }
-        ]
-
-    # Different data for zohreh
-    elif request.user.username == 'Zohreh83':
-        student_info = {
-            'name': 'زهره حسینی',
-            'student_id': '401987654321',
-            'major': 'مهندسی کامپیوتر',
-
-        }
-
-        exam_schedules = [
-            {
-                'course_name': 'طراحی الگوریتم',
-                'professor': 'دکتر محسنی',
-                'exam_date': '۱۴۰۴/۱۰/۲۶',
-                'exam_time': '۹:۰۰',
-                'location': 'سالن ۳۰۱',
-                'seat_number': 'C08',
-                'status': 'تأیید شده'
-            },
-            {
-                'course_name': 'برنامه‌نویسی پیشرفته',
-                'professor': 'دکتر نوروزی',
-                'exam_date': '۱۴۰۴/۱۰/۳۰',
-                'exam_time': '۱۴:۳۰',
-                'location': 'سالن ۱۰۲',
-                'seat_number': 'D15',
-                'status': 'تأیید شده'
-            },
-            {
-                'course_name': 'پایگاه داده پیشرفته',
-                'professor': 'دکتر جعفری',
-                'exam_date': '۱۴۰۴/۱۱/۰۳',
-                'exam_time': '۱۱:۰۰',
-                'location': 'سالن ۲۰۱',
-                'seat_number': 'E22',
-                'status': 'تأیید شده'
-            },
-            {
-                'course_name': 'مهندسی اینترنت',
-                'professor': 'دکتر امیری',
-                'exam_date': '۱۴۰۴/۱۱/۰۷',
-                'exam_time': '۱۵:۳۰',
-                'location': 'سالن ۴۰۱',
-                'seat_number': 'F10',
-                'status': 'تأیید شده'
-            }
-        ]
+    # دریافت پروفایل برای نمایش شماره دانشجویی در بالای صفحه
+    profile = getattr(request.user, 'student_profile', None)
 
     context = {
-        'exam_schedules': exam_schedules,
-        'student_info': student_info,
-        'today': datetime.now().strftime("%Y/%m/%d"),
+        'exam_schedules': exams,
+        'student_info': {
+            'name': request.user.get_full_name() or request.user.username,
+            'student_id': profile.student_id if profile else "ثبت نشده",
+            'major': profile.major if profile else "ثبت نشده",
+        },
+        'today': "۱۴۰۴/۱۱/۱۸"
     }
-
     return render(request, 'schedule.html', context)
-
 
 
 @login_required

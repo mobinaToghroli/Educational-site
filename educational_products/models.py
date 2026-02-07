@@ -9,35 +9,33 @@ def get_file_extension(file):
     name, ext = os.path.splitext(base_name)
     return name, ext
 
+
 def upload_image(instance, filename):
     rand_name = random.randint(1, 99999999999999)
     name, ext = get_file_extension(filename)
-    # Use a placeholder if instance.id doesn't exist yet
     obj_id = instance.id if instance.id else "new"
     final_name = f"{obj_id}-{instance.name}-{rand_name}{ext}"
     return f"products/{final_name}"
 
+
 class ProductManager(models.Manager):
     def get_active_products(self):
-        return self.get_queryset().filter(active=True)
-
+        # اصلاح شد: نام فیلد در مدل actived است، پس اینجا هم باید actived باشد
+        return self.get_queryset().filter(actived=True)
 
 
 class Product(models.Model):
-    name = models.CharField(max_length=200 , verbose_name='نام دانشجو')
-    lastname = models.CharField(max_length=200 , verbose_name='نام خانوادگی دانشجو')
+    name = models.CharField(max_length=200, verbose_name='نام دانشجو')
+    lastname = models.CharField(max_length=200, verbose_name='نام خانوادگی دانشجو')
     userid = models.IntegerField(verbose_name='شماره دانشجویی')
-    image = models.ImageField(upload_to=upload_image, null=True, blank=True , verbose_name='تصویر')
-    actived = models.BooleanField(default=False,verbose_name='فعال/غیرفعال')
-    Entered_date = models.DateTimeField(auto_now_add=False , verbose_name='سال ورود')
+    image = models.ImageField(upload_to=upload_image, null=True, blank=True, verbose_name='تصویر')
+    actived = models.BooleanField(default=False, verbose_name='فعال/غیرفعال')
+    Entered_date = models.DateTimeField(auto_now_add=False, verbose_name='سال ورود')
+
+    objects = ProductManager()
 
     def __str__(self):
         return f"{self.name} {self.lastname}"
-
-
-
-
-
 
 
 class GraduationRequest(models.Model):
@@ -62,12 +60,25 @@ class GraduationRequest(models.Model):
         ('ee', 'مهندسی برق'),
     ]
 
+    SEMESTER_CHOICES = [
+        ('fall_1404', 'پاییز ۱۴۰۴'),
+        ('spring_1405', 'بهار ۱۴۰۵'),
+        ('summer_1405', 'تابستان ۱۴۰۵'),
+    ]
+
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='کاربر')
     student_name = models.CharField(max_length=100, verbose_name='نام و نام خانوادگی')
     student_id = models.CharField(max_length=20, verbose_name='شماره دانشجویی')
     major = models.CharField(max_length=50, choices=MAJOR_CHOICES, verbose_name='رشته تحصیلی')
     degree = models.CharField(max_length=20, choices=DEGREE_CHOICES, verbose_name='مقطع تحصیلی')
-    graduation_semester = models.CharField(max_length=50, verbose_name='نیمسال فارغ‌التحصیلی')
+
+    # اصلاح شد: فقط یک بار تعریف با استفاده از choices
+    graduation_semester = models.CharField(
+        max_length=50,
+        choices=SEMESTER_CHOICES,
+        verbose_name='نیمسال فارغ‌التحصیلی'
+    )
+
     graduation_date = models.DateField(verbose_name='تاریخ پیشنهادی فارغ‌التحصیلی')
     thesis_title = models.CharField(max_length=200, blank=True, verbose_name='عنوان پایان‌نامه/پروژه')
     supervisor_name = models.CharField(max_length=100, blank=True, verbose_name='نام استاد راهنما')
@@ -86,30 +97,13 @@ class GraduationRequest(models.Model):
         return f"{self.student_name} - {self.get_status_display()}"
 
 
-# models.py - Add these models
-class StudentProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='student_profile')
-    student_id = models.CharField(max_length=20, verbose_name='شماره دانشجویی')
-    major = models.CharField(max_length=100, verbose_name='رشته تحصیلی')
-    entry_year = models.IntegerField(verbose_name='سال ورود')
-    gpa = models.FloatField(verbose_name='معدل', default=0.0)
-    phone = models.CharField(max_length=15, blank=True, verbose_name='تلفن همراه')
-    email = models.EmailField(verbose_name='ایمیل')
-    address = models.TextField(blank=True, verbose_name='آدرس')
-
-    class Meta:
-        verbose_name = 'پروفایل دانشجو'
-        verbose_name_plural = 'پروفایل‌های دانشجویی'
-
-    def __str__(self):
-        return f"{self.user.get_full_name()} - {self.student_id}"
 
 
 class ExamSchedule(models.Model):
     student = models.ForeignKey(User, on_delete=models.CASCADE, related_name='exam_schedules')
     course_name = models.CharField(max_length=200, verbose_name='نام درس')
     professor = models.CharField(max_length=100, verbose_name='استاد')
-    exam_date = models.DateField(verbose_name='تاریخ امتحان')
+    exam_date = models.CharField(max_length=20, verbose_name='تاریخ امتحان')
     exam_time = models.TimeField(verbose_name='ساعت امتحان')
     location = models.CharField(max_length=100, verbose_name='مکان')
     seat_number = models.CharField(max_length=20, verbose_name='شماره صندلی')
@@ -122,3 +116,23 @@ class ExamSchedule(models.Model):
 
     def __str__(self):
         return f"{self.course_name} - {self.student.username}"
+
+
+class StudentProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='student_profile')
+    student_id = models.CharField(max_length=20, verbose_name='شماره دانشجویی')
+    major = models.CharField(max_length=100, verbose_name='رشته تحصیلی')
+    entry_year = models.IntegerField(verbose_name='سال ورود')
+    gpa = models.FloatField(verbose_name='معدل', default=0.0)
+    phone = models.CharField(max_length=15, blank=True, verbose_name='تلفن همراه')
+    email = models.EmailField(verbose_name='ایمیل')
+    address = models.TextField(blank=True, verbose_name='آدرس')
+    guide_professor = models.CharField(max_length=100, verbose_name='استاد راهنما')
+    units = models.IntegerField(verbose_name='واحد های گذرانده')
+
+    class Meta:
+        verbose_name = 'پروفایل دانشجو'
+        verbose_name_plural = 'پروفایل‌های دانشجویی'
+
+    def __str__(self):
+        return f"{self.user.get_full_name()} - {self.student_id}"

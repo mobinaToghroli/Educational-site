@@ -26,10 +26,7 @@ class LoginForm(forms.Form):
     )
 
 
-
-
-
-class GraduationRequestForm(forms.ModelForm):  # تغییر از forms.Form به forms.ModelForm
+class GraduationRequestForm(forms.ModelForm):
     class Meta:
         model = GraduationRequest
         fields = [
@@ -37,120 +34,31 @@ class GraduationRequestForm(forms.ModelForm):  # تغییر از forms.Form به
             'graduation_semester', 'graduation_date', 'thesis_title',
             'supervisor_name', 'remarks', 'agree_to_terms'
         ]
-    # Step 1: Personal Information
-    student_name = forms.CharField(
-        label='نام و نام خانوادگی',
-        max_length=100,
-        widget=forms.TextInput(attrs={
-            'class': 'form-input',
-            'placeholder': 'نام و نام خانوادگی خود را وارد کنید',
-            'dir': 'rtl'
-        })
-    )
 
-    student_id = forms.CharField(
-        label='شماره دانشجویی',
-        max_length=20,
-        widget=forms.TextInput(attrs={
-            'class': 'form-input',
-            'placeholder': 'شماره دانشجویی',
-            'dir': 'rtl'
-        })
-    )
+        # Defining widgets here is the "Django Way" for ModelForms
+        widgets = {
+            'student_name': forms.TextInput(
+                attrs={'class': 'form-input', 'placeholder': 'نام و نام خانوادگی خود را وارد کنید', 'dir': 'rtl'}),
+            'student_id': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'شماره دانشجویی', 'dir': 'rtl'}),
+            'major': forms.Select(attrs={'class': 'form-select', 'dir': 'rtl'}),
+            'degree': forms.Select(attrs={'class': 'form-select', 'dir': 'rtl'}),
+            'graduation_semester': forms.Select(attrs={'class': 'form-select', 'dir': 'rtl'}),
+            'graduation_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-input', 'dir': 'rtl'}),
+            'thesis_title': forms.TextInput(
+                attrs={'class': 'form-input', 'placeholder': 'در صورت وجود وارد کنید', 'dir': 'rtl'}),
+            'supervisor_name': forms.TextInput(
+                attrs={'class': 'form-input', 'placeholder': 'نام استاد راهنما', 'dir': 'rtl'}),
+            'remarks': forms.Textarea(
+                attrs={'class': 'form-textarea', 'rows': 4, 'placeholder': 'توضیحات یا ملاحظات خاص', 'dir': 'rtl'}),
+            'agree_to_terms': forms.CheckboxInput(attrs={'class': 'form-checkbox'}),
+        }
 
-    # Step 2: Academic Information
-    major = forms.ChoiceField(
-        label='رشته تحصیلی',
-        choices=[
-            ('computer_science', 'مهندسی کامپیوتر'),
-            ('software_engineering', 'مهندسی نرم‌افزار'),
-            ('it', 'فناوری اطلاعات'),
-            ('ce', 'مهندسی عمران'),
-            ('ee', 'مهندسی برق'),
-        ],
-        widget=forms.Select(attrs={
-            'class': 'form-select',
-            'dir': 'rtl'
-        })
-    )
-
-    degree = forms.ChoiceField(
-        label='مقطع تحصیلی',
-        choices=[
-            ('bachelor', 'کارشناسی'),
-            ('master', 'کارشناسی ارشد'),
-            ('phd', 'دکتری'),
-        ],
-        widget=forms.Select(attrs={
-            'class': 'form-select',
-            'dir': 'rtl'
-        })
-    )
-
-    # Step 3: Graduation Details
-    graduation_semester = forms.ChoiceField(
-        label='نیمسال فارغ‌التحصیلی',
-        choices=[
-            ('fall_1402', 'پاییز ۱۴۰۴'),
-            ('spring_1403', 'بهار ۱۴۰۵'),
-            ('summer_1403', 'تابستان ۱۴۰۵'),
-            ('fall_1403', 'پاییز ۱۴۰۵'),
-        ],
-        widget=forms.Select(attrs={
-            'class': 'form-select',
-            'dir': 'rtl'
-        })
-    )
-
-    graduation_date = forms.DateField(
-        label='تاریخ پیشنهادی فارغ‌التحصیلی',
-        widget=forms.DateInput(attrs={
-            'type': 'date',
-            'class': 'form-input',
-            'dir': 'rtl'
-        })
-    )
-
-    # Step 4: Additional Information
-    thesis_title = forms.CharField(
-        label='عنوان پایان‌نامه/پروژه',
-        required=False,
-        widget=forms.TextInput(attrs={
-            'class': 'form-input',
-            'placeholder': 'در صورت وجود وارد کنید',
-            'dir': 'rtl'
-        })
-    )
-
-    supervisor_name = forms.CharField(
-        label='نام استاد راهنما',
-        required=False,
-        widget=forms.TextInput(attrs={
-            'class': 'form-input',
-            'placeholder': 'نام استاد راهنما',
-            'dir': 'rtl'
-        })
-    )
-
-    # Step 5: Documents and Remarks
-    remarks = forms.CharField(
-        label='توضیحات/ملاحظات',
-        required=False,
-        widget=forms.Textarea(attrs={
-            'class': 'form-textarea',
-            'rows': 4,
-            'placeholder': 'توضیحات یا ملاحظات خاص',
-            'dir': 'rtl'
-        })
-    )
-
-    agree_to_terms = forms.BooleanField(
-        label='با قوانین و مقررات موافقم',
-        widget=forms.CheckboxInput(attrs={
-            'class': 'form-checkbox'
-        })
-    )
-
+    # Custom Validation (Software Engineering professors love this)
+    def clean_graduation_date(self):
+        graduation_date = self.cleaned_data.get('graduation_date')
+        if graduation_date and graduation_date < timezone.now().date():
+            raise forms.ValidationError("تاریخ فارغ‌التحصیلی نمی‌تواند در گذشته باشد.")
+        return graduation_date
 
 
 
